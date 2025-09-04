@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
 import { addItem } from './CartSlice';
@@ -10,6 +10,14 @@ function ProductList({ onHomeClick }) {
     const [addedToCart, setAddedToCart] = useState({});
     const CartItems = useSelector(state => state.cart.items);
     const dispatch = useDispatch();
+    
+    useEffect(() => {
+        const validKeys = CartItems.map(item => item.name);
+        const newAddedToCart = Object.fromEntries(
+            Object.entries(addedToCart).filter(([key]) => validKeys.includes(key))
+        );
+        setAddedToCart(newAddedToCart);
+    }, [CartItems])
 
     const plantsArray = [
         {
